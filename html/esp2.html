@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Ordenar Especialidades</title>
+    <style>
+        .container {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .especialidades {
+            width: 50%;
+            border: 1px solid #ccc;
+            padding: 10px;
+        }
+
+        .mais-identifica {
+            background-color: #ffffc3; /* Amarelo Claro */
+        }
+
+        .menos-identifica {
+            background-color: #fced98; /* Alaranjado Claro */
+        }
+
+        .especialidade {
+            cursor: pointer;
+            margin: 5px;
+            padding: 5px;
+            border: 1px solid #333;
+            background-color: #f9f9f9;
+        }
+
+        .umacinco {
+            margin: 4px;
+            border: 0px;
+            line-height: 13px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Escolha de Especialidades</h1>
+    <div class="container">
+        <div class="especialidades">
+            <h2>Especialidades</h2>
+            <div class="especialidade" draggable="true" data-identificacao="nenhuma">Acupuntura</div>
+            <div class="especialidade" draggable="true" data-identificacao="nenhuma">Cirurgia Vascular</div>
+            <!-- Adicione as outras especialidades aqui -->
+        </div>
+        <div class="umacinco">
+            <h4><br><br><br><br>1</h4>
+            <h4>2</h4>
+            <h4>3</h4>
+            <h4>4</h4>
+            <h4>5</h4>
+        </div>
+        <div class="especialidades mais-identifica" ondragover="allowDrop(event)" ondrop="drop(event)">
+            <h2>Mais se Identifica</h2>
+        </div>
+        <div class="umacinco">
+            <h4><br><br><br><br>1</h4>
+            <h4>2</h4>
+            <h4>3</h4>
+            <h4>4</h4>
+            <h4>5</h4>
+        </div>
+        <div class="especialidades menos-identifica" ondragover="allowDrop(event)" ondrop="drop(event)">
+            <h2>Menos se Identifica</h2>
+        </div>
+    </div>
+
+    <script>
+        function allowDrop(event) {
+            event.preventDefault();
+        }
+
+        function drop(event) {
+            event.preventDefault();
+            const especialidadeNome = event.dataTransfer.getData('text/plain');
+            const especialidadeIdentificacao = event.dataTransfer.getData('identificacao');
+            const div = event.target;
+
+            // Verifique se a especialidade já está na mesma caixa
+            if (div.querySelector(`.especialidade[data-identificacao="${especialidadeIdentificacao}"]`)) {
+                return;
+            }
+
+            // Remova a especialidade da caixa original
+            const especialidadeOriginal = document.querySelector(`.especialidade[data-identificacao="${especialidadeIdentificacao}"]`);
+            if (especialidadeOriginal) {
+                especialidadeOriginal.remove();
+            }
+
+            // Verifique se a caixa não excedeu 5 especialidades
+            if (div.children.length < 6) {
+                const especialidade = document.createElement('div');
+                especialidade.className = 'especialidade';
+                especialidade.textContent = especialidadeNome;
+                especialidade.setAttribute('data-identificacao', especialidadeIdentificacao);
+                div.appendChild(especialidade);
+            }
+        }
+
+        const especialidades = document.querySelectorAll('.especialidade');
+
+        especialidades.forEach(especialidade => {
+            especialidade.addEventListener('dragstart', (e) => {
+                e.dataTransfer.setData('text/plain', especialidade.textContent);
+                e.dataTransfer.setData('identificacao', especialidade.getAttribute('data-identificacao'));
+            });
+
+            especialidade.addEventListener('dragend', () => {
+                // Este evento pode ser usado para atualizar o estado, se necessário
+            });
+        });
+    </script>
+</body>
+</html>
